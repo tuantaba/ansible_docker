@@ -1,0 +1,59 @@
+---
+
+
+- name: Ubuntu | Ensure required base packages are present (for chattr)
+  apt: name={{ item }} state=latest update_cache=yes
+  with_items:
+    - e2fsprogs
+  tags: resolv
+
+
+- name: Ubuntu | Stat /etc/resolv.conf
+  stat: path=/etc/resolv.conf
+  register: resolvconf
+  tags: resolv
+
+
+- name: Ubuntu | Remove /etc/resolv.conf if symbolic link
+  file: >
+    path=/etc/resolv.conf
+    state=absent
+  when: resolvconf.stat.islnk
+  tags: resolv
+
+
+- name: Ubuntu | Create dhclient hook to prevent it from updating /etc/resolv.conf
+  copy: >
+    src=nodnsupdate
+    dest=/etc/dhcp/dhclient-enter-hooks.d/nodnsupdate
+    owner=root
+    group=root
+    mode=0644
+  tags: resolv
+
+
+- name: Ubuntu | Stat /etc/resolv.conf
+  stat: path=/etc/resolv.conf
+  register: resolvconf
+  tags: resolv
+
+
+- name: Ubuntu | Change /etc/resolv.conf configuration
+  shell: chattr -i /etc/resolv.conf
+  when: resolvconf.stat.islnk is defined and resolvconf.stat.islnk == False
+  tags: resolv
+
+
+- name: Ubuntu | Create /etc/resolv.conf configuration
+  template: >
+    src=resolv.conf.j2
+    dest=/etc/resolv.conf
+    owner=root
+    group=root
+    mode=0644
+  tags: resolv
+
+
+- name: Ubuntu | Change /etc/resolv.conf configuration
+  shell: chattr +i /etc/resolv.conf
+  tags: resolv

@@ -1,0 +1,41 @@
+---
+
+
+- name: CentOS | Install packages
+  yum: name={{ item }} state=present
+  with_items:
+    - tcp_wrappers
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - tcpwrappers
+    - security
+
+
+- name: Ubuntu | Install packages
+  apt: name={{ item }} state=present
+  with_items:
+    - tcpd
+  when: ansible_os_family == 'Debiban'    
+  tags:
+    - tcpwrappers
+    - security
+
+
+- name: Config security for ssh
+  template: src=hosts.allow
+            dest=/etc/hosts.allow
+            mode=0644
+  tags:
+    - tcpwrappers
+    - security
+    - hosts_allow_deny
+
+
+- name: Config deny ssh
+  template: src=hosts.deny
+            dest=/etc/hosts.deny
+            mode=0644
+  tags:
+    - tcpwrappers
+    - security
+    - hosts_allow_deny

@@ -1,0 +1,24 @@
+#------------------------------------------------- Begin role users ----------------------------------------------------#
+
+
+docker_engine_storage_driver: overlay2
+docker_engine_storage_config:
+        device: /dev/sdb
+docker_engine_log_driver: syslog
+use_keys: docker_system
+
+
+users_add:
+  - { user: 'user1', password: '{{ password_user1 }}'}
+  - { user: 'user2', password: '{{ password_user2 }}'}
+
+users_add_sudo:
+  - { user: 'user1', password: '{{ password_user1 }}' }
+  - { user: 'user2', password: '{{ password_user2 }}'}
+
+
+# Khai báo allow user được phép ssh
+ssh_allow_users: "user1 user2"
+apt_update: yes
+apt_upgrade: no
+

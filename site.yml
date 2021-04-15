@@ -1,0 +1,12 @@
+---
+- hosts: docker
+  gather_facts: yes
+  sudo: yes
+  roles:
+          #    - resolv
+          #    - hostname
+          #    - users
+          #    - sshd
+          #    - sysctl
+          #    - tcpwrappers
+    - docker

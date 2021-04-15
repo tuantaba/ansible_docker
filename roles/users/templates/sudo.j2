@@ -1,0 +1,6 @@
+{% if item.limit_command is defined %}
+{{ item.user }} ALL=(ALL:ALL) NOPASSWD:{{ item.limit_command }}
+{% else %}
+{{ item.user }} ALL=(ALL:ALL) NOPASSWD:ALL
+{% endif %}
+

@@ -1,0 +1,28 @@
+---
+
+
+- name: CentOS | Install packages
+  yum: name={{ item }} state=latest
+  with_items:
+    - e2fsprogs
+  tags: resolv
+
+
+- name: CentOS | Change /etc/resolv.conf configuration
+  shell: chattr -i /etc/resolv.conf
+  tags: resolv
+
+
+- name: CentOS | Create /etc/resolv.conf configuration
+  template: >
+    src=resolv.conf.j2
+    dest=/etc/resolv.conf
+    owner=root
+    group=root
+    mode=0644
+  tags: resolv
+
+
+- name: CentOS | Change /etc/resolv.conf configuration
+  shell: chattr +i /etc/resolv.conf
+  tags: resolv
